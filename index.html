@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ajedrez Neón - Usuario vs Computadora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app" class="app-container">
+    
+    <!-- LEFT PANEL: Chat Assistant -->
+    <aside class="chat-sidebar">
+      <div class="chat-header">
+        <div class="assistant-avatar">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2z"/>
+            <rect x="4" y="8" width="16" height="12" rx="2"/>
+            <circle cx="9" cy="13" r="1.5"/>
+            <circle cx="15" cy="13" r="1.5"/>
+            <path d="M9 17h6"/>
+          </svg>
+        </div>
+        <div class="assistant-info">
+          <div class="assistant-name">Breakpoint Creativa AI</div>
+          <div class="assistant-status"><span class="status-dot"></span> En línea</div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-bubble bot-bubble">
+          ¡Hola! Soy Breakpoint Creativa, tu entrenador personal de ajedrez ♟️✨ ¡Te enseñaré a jugar desde cero o a mejorar tu estrategia! Hazme cualquier pregunta o toca uno de los temas abajo.
+        </div>
+      </div>
+
+      <div class="tutor-chips" id="tutor-chips">
+        <button class="chip-btn" data-query="¿Cómo se juega al ajedrez?">📖 Reglas básicas</button>
+        <button class="chip-btn" data-query="¿Cómo se mueven las piezas?">♞ Movimientos</button>
+      </div>
+
+      <form class="chat-input-area" id="chat-form">
+        <input 
+          type="text" 
+          id="chat-input" 
+          placeholder="Escribe un mensaje..." 
+          autocomplete="off"
+        />
+        <button type="submit" class="send-btn" aria-label="Enviar">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </form>
+    </aside>
+
+    <!-- MAIN CENTER PANEL: Chess Board -->
+    <main class="chessboard-section">
+      <div class="game-status-bar" id="game-status-bar">
+        <div class="turn-indicator">
+          <span class="player-badge active-player" id="player-turn-badge">Turno: Blancas</span>
+        </div>
+        <div class="difficulty-picker">
+          <label for="ai-difficulty">Dificultad IA:</label>
+          <select id="ai-difficulty">
+            <option value="easy">Fácil</option>
+            <option value="medium" selected>Medio</option>
+            <option value="hard">Maestro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chessboard-wrapper" id="chessboard-wrapper">
+        <div class="chessboard" id="chessboard"></div>
+      </div>
+
+      <div class="captured-bar">
+        <div class="captured-set" id="captured-white">
+          <span class="captured-label">Capturadas por Negras:</span>
+          <div class="captured-icons" id="captured-by-black"></div>
+        </div>
+        <div class="captured-set" id="captured-black">
+          <span class="captured-label">Capturadas por Blancas:</span>
+          <div class="captured-icons" id="captured-by-white"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL: Moves & Actions -->
+    <aside class="right-sidebar">
+      <div class="moves-card">
+        <div class="moves-header">MOVIMIENTOS</div>
+        <div class="moves-list" id="moves-list">
+          <div class="moves-placeholder">No hay movimientos aún</div>
+        </div>
+      </div>
+
+      <div class="actions-panel">
+        <button class="action-btn analyze-action" id="btn-analyze-game">📊 Analizar Partida</button>
+        <button class="action-btn primary-action" id="btn-new-game">Nueva Partida</button>
+        <button class="action-btn secondary-action" id="btn-flip-board">Voltear Tablero</button>
+        
+        <div class="aux-actions">
+          <button class="action-btn aux-btn" id="btn-undo" title="Deshacer Movimiento">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7v6h6"/>
+              <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+            </svg>
+            Deshacer
+          </button>
+          <button class="action-btn aux-btn" id="btn-hint" title="Obtener Pista">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18h6"/>
+              <path d="M10 22h4"/>
+              <path d="M15.09 14A6 6 0 0 0 18 9 6 6 0 0 0 6 9a6 6 0 0 0 2.91 5"/>
+            </svg>
+            Pista
+          </button>
+          <button class="action-btn aux-btn" id="btn-sound" title="Sonido">
+            <svg id="sound-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            Sonido
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Pawn Promotion Modal -->
+  <div class="modal-overlay hidden" id="promotion-modal">
+    <div class="modal-content">
+      <h3>Selecciona pieza de promoción</h3>
+      <div class="promotion-choices" id="promotion-choices"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

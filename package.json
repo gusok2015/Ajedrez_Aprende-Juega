@@ -1,0 +1,17 @@
+{
+  "name": "juego-ajedrez",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.6"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  }
+}
